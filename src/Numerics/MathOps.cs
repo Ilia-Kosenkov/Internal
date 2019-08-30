@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 [assembly:InternalsVisibleTo("Image")]
 [assembly: InternalsVisibleTo("Tests")]
@@ -44,5 +45,12 @@ namespace Internal.Numerics
 
         [MethodImpl(MethodImplOptions.ForwardRef, MethodCodeType = MethodCodeType.IL)]
         public static extern int DangerousCompare<T>(T left, T right) where T : unmanaged;
+
+        [MethodImpl(MethodImplOptions.ForwardRef, MethodCodeType = MethodCodeType.IL)]
+        public static extern TTo DangerousCast2<TFrom, TTo>(TFrom item)
+            where TFrom : unmanaged
+            where TTo : unmanaged;
+
+        
     }
 }
