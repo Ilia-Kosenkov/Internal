@@ -1,4 +1,4 @@
-﻿.class private sealed abstract auto ansi Internal.Numerics.MathOps
+﻿.class private sealed abstract auto ansi Internal.UnsafeNumerics.MathOps
 {
 	.method public static hidebysig !!T DangerousAdd<valuetype .ctor (class [mscorlib]System.ValueType modreq ([mscorlib]System.Runtime.InteropServices.UnmanagedType)) T>(!!T left, !!T right) cil managed
 	{
@@ -96,7 +96,7 @@
 	
 		ldarg.0
 		ldarg.1
-		call	bool Internal.Numerics.MathOps::DangerousEquals<!!T>(!!T, !!T)
+		call	bool Internal.UnsafeNumerics.MathOps::DangerousEquals<!!T>(!!T, !!T)
 		ldc.i4.0
 		ceq
 		ret
@@ -139,7 +139,7 @@
 		IL_001:
 		ldarg.0
 		ldarg.1
-		call		bool Internal.Numerics.MathOps::DangerousEquals<!!T>(!!T, !!T)
+		call		bool Internal.UnsafeNumerics.MathOps::DangerousEquals<!!T>(!!T, !!T)
 		ret
 	}
 
@@ -160,7 +160,7 @@
 		IL_001:
 		ldarg.0
 		ldarg.1
-		call		bool Internal.Numerics.MathOps::DangerousEquals<!!T>(!!T, !!T)
+		call		bool Internal.UnsafeNumerics.MathOps::DangerousEquals<!!T>(!!T, !!T)
 		ret
 	}
 
@@ -182,7 +182,7 @@
 		IL_001:
 		ldarg.0
 		ldarg.1
-		call		bool Internal.Numerics.MathOps::DangerousEquals<!!T>(!!T, !!T)
+		call		bool Internal.UnsafeNumerics.MathOps::DangerousEquals<!!T>(!!T, !!T)
 		brfalse.s	IL_002
 
 		ldc.i4.0
