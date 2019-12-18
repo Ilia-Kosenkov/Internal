@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Image")]
 [assembly: InternalsVisibleTo("Tests")]
 [assembly: InternalsVisibleTo("CopyBenchmarks")]
+[assembly: InternalsVisibleTo("Benchmark")]
+
 namespace Internal.Numerics
 {
     internal static class MathOps

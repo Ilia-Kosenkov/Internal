@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Resources;
+using NUnit.Framework;
 
 using Ops = Internal.Numerics.MathOps;
 using UOps = Internal.UnsafeNumerics.MathOps;
@@ -30,6 +31,10 @@ namespace Tests
             Assert.AreEqual(Ops.DangerousMultiply(100, 200), UOps.DangerousMultiply(100, 200));
             Assert.AreEqual(Ops.DangerousMultiply(100e3, 200), UOps.DangerousMultiply(100e3, 200));
             Assert.AreEqual(Ops.DangerousMultiply(100L, 200), UOps.DangerousMultiply(100, 200L));
+
+
+            Assert.AreEqual(1e200 * -1.23512e-3, UOps.DangerousMultiply(1e200, -1.23512e-3));
+
         }
 
         [Test]
@@ -76,6 +81,27 @@ namespace Tests
         public void TestDangerousCast()
         {
             Assert.AreEqual(Ops.DangerousCast<double, int>(123.56), UOps.DangerousCast<double, int>(123.56));
+        }
+
+        [Test]
+        public unsafe void TestUndefinedBoolBehavior()
+        {
+            var b = true;
+
+            var x = *(int*) &b;
+
+            var r = UOps.DangerousSubtract(false, true);
+            //r = UOps.DangerousSubtract(r, true);
+
+            var y = *(int*) &r;
+
+            if (r)
+            {
+                Assert.AreNotEqual(r, true);
+                Assert.AreNotEqual(x, y);
+            }
+            else
+                Assert.Fail("Clause not entered.");
         }
     }
 }

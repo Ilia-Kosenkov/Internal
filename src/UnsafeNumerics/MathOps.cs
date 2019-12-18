@@ -1,13 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("Image")]
-[assembly: InternalsVisibleTo("Tests")]
-[assembly: InternalsVisibleTo("CopyBenchmarks")]
-
-
 namespace Internal.UnsafeNumerics
 {
-    internal static class MathOps
+    public static class MathOps
     {
         [MethodImpl(MethodImplOptions.ForwardRef, MethodCodeType = MethodCodeType.IL)]
         public static extern T DangerousAdd<T>(T left, T right) where T : unmanaged;

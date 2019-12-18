@@ -1,4 +1,4 @@
-﻿.class private sealed abstract auto ansi Internal.UnsafeNumerics.MathOps
+﻿.class public sealed abstract auto ansi Internal.UnsafeNumerics.MathOps
 {
 	.method public static hidebysig !!T DangerousAdd<valuetype .ctor (class [mscorlib]System.ValueType modreq ([mscorlib]System.Runtime.InteropServices.UnmanagedType)) T>(!!T left, !!T right) cil managed
 	{
@@ -75,7 +75,7 @@
 		ldtoken		[mscorlib]System.Single
 		call		class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)
         call        bool [mscorlib]System.Type::op_Equality(class [mscorlib]System.Type, class [mscorlib]System.Type)
-		brfalse.s	IL_002 // If not double, goto
+		brfalse.s	IL_002 // If not float, goto
 		ldarg.0
 		ldarg.1
 		call		bool [MathNet.Numerics]MathNet.Numerics.Precision::AlmostEqual(float32, float32)
