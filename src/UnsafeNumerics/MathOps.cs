@@ -4,7 +4,7 @@ namespace Internal.UnsafeNumerics
 {
     public static class MathOps
     {
-        [MethodImpl(MethodImplOptions.ForwardRef | MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveInlining, MethodCodeType = MethodCodeType.IL)]
+        [MethodImpl(MethodImplOptions.ForwardRef | MethodImplOptions.AggressiveInlining, MethodCodeType = MethodCodeType.IL)]
         public static extern T DangerousAdd<T>(T left, T right) where T : unmanaged;
 
         [MethodImpl(MethodImplOptions.ForwardRef | MethodImplOptions.AggressiveInlining, MethodCodeType = MethodCodeType.IL)]

@@ -6,6 +6,11 @@
     <RootNamespace>Internal.UnsafeNumerics</RootNamespace>
     <AssemblyName>Internal.UnsafeNumerics</AssemblyName>
     <Platforms>AnyCPU;x64;x86</Platforms>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <Version>0.1.0</Version>
+    <Authors>Ilia Kosenkov</Authors>
+    <Product>UnsafeNumerics</Product>
+    <Description>Type-unsafe basic generic numerical operations.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -19,7 +24,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
