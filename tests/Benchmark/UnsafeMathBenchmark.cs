@@ -19,6 +19,8 @@ namespace Benchmark
         [Params(1_000, 10_000, 100_000, 1_024_000)]
         public int N { get; set; }
 
+        public object Sum { get; set; }
+
         [GlobalSetup]
         public void GlobalSetup()
         {
@@ -36,17 +38,31 @@ namespace Benchmark
                 sum += item * item;
 
             sum /= N;
+            Sum = sum;
         }
 
-        //[Benchmark]
-        //public void MethodSum()
-        //{
-        //    var sum = 0.0;
-        //    foreach (var item in _data)
-        //        sum = Add(sum, Multiply(item, item));
+        [Benchmark]
+        public void BranchSum()
+        {
+            var sum = 0.0;
+            foreach (var item in _data)
+                sum = RefOps.DangerousAdd(sum, RefOps.DangerousMultiply(item, item));
 
-        //    sum = Divide(sum, N);
-        //}
+            sum = RefOps.DangerousDivide(sum, N);
+            Sum = sum;
+        }
+
+        [Benchmark]
+        public void UnsafeBranchSum()
+        {
+            var sum = 0.0;
+            foreach (var item in _data)
+                sum = UnsafeRefOps.DangerousAdd(sum, UnsafeRefOps.DangerousMultiply(item, item));
+
+            sum = UnsafeRefOps.DangerousDivide(sum, N);
+            Sum = sum;
+        }
+
 
         [Benchmark]
         public void ExpressionSum()
@@ -55,7 +71,10 @@ namespace Benchmark
             foreach (var item in _data)
                 sum = Ops.DangerousAdd(sum, Ops.DangerousMultiply(item, item));
 
-            sum = Ops.DangerousDivide(sum, Ops.DangerousCast<int, double>(N));
+            //sum = Ops.DangerousDivide(sum, Ops.DangerousCast<int, double>(N));
+            sum = Ops.DangerousDivide(sum, N);
+
+            Sum = sum;
         }
 
         [Benchmark]
@@ -65,25 +84,11 @@ namespace Benchmark
             foreach (var item in _data)
                 sum = UOps.DangerousAdd(sum, UOps.DangerousMultiply(item, item));
 
-            sum = UOps.DangerousDivide(sum, UOps.DangerousCast<int, double>(N));
+            //sum = UOps.DangerousDivide(sum, UOps.DangerousCast<int, double>(N));
+            sum = UOps.DangerousDivide(sum, N);
+
+            Sum = sum;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static double Add(double x, double y)
-        {
-            return x + y;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static double Multiply(double x, double y)
-        {
-            return x * y;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static double Divide(double x, double y)
-        {
-            return x / y;
-        }
     }
 }
