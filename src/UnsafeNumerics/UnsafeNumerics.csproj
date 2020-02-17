@@ -5,33 +5,35 @@
     <LangVersion>latest</LangVersion>
     <RootNamespace>Internal.UnsafeNumerics</RootNamespace>
     <AssemblyName>Internal.UnsafeNumerics</AssemblyName>
-    <Platforms>AnyCPU;x64;x86</Platforms>
+    <Platforms>x64;x86</Platforms>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <Version>0.1.0</Version>
     <Authors>Ilia Kosenkov</Authors>
     <Product>UnsafeNumerics</Product>
     <Description>Type-unsafe basic generic numerical operations.</Description>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <Optimize>false</Optimize>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <Optimize>false</Optimize>
-    <PlatformTarget>x64</PlatformTarget>
+    <RepositoryUrl>https://github.com/Ilia-Kosenkov/Internal</RepositoryUrl>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>true</Optimize>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <Optimize>true</Optimize>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
   <ItemGroup>
     <IL Include="**\*.il" Exclude="**\obj\**\*.il;**\bin\**\*.il" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MathNet.Numerics" Version="4.8.1" />
+    <PackageReference Include="MathNet.Numerics" Version="4.9.0" />
   </ItemGroup>
   <Target Name="ProcessILAfterCompile" AfterTargets="Compile">
     <CallTarget Targets="InitializeIL; CoreDecompile; CoreCompileIL" />
@@ -93,18 +95,18 @@
     <PropertyGroup>
       <ILAsm>"$(FrameworkPath)\ilasm.exe" /nologo /quiet /output:@(IntermediateAssembly->'"%(FullPath)"', ' ')</ILAsm>
     </PropertyGroup>
-    <!--<PropertyGroup Condition=" '$(FileAlignment)' != '' ">
+    <PropertyGroup Condition=" '$(FileAlignment)' != '' ">
       <ILAsm>$(ILAsm) /alignment=$(FileAlignment)</ILAsm>
-    </PropertyGroup>-->
-    <!--<PropertyGroup Condition=" '$(BaseAddress)' != '' ">
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(BaseAddress)' != '' ">
       <ILAsm>$(ILAsm) /base=$(BaseAddress)</ILAsm>
-    </PropertyGroup>-->
+    </PropertyGroup>
     <PropertyGroup Condition=" '$(OutputType)' == 'Library' ">
       <ILAsm>$(ILAsm) /dll</ILAsm>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(DebugType)' == 'pdbonly' ">
+    <!--<PropertyGroup Condition=" '$(DebugType)' == 'pdbonly' ">
       <ILAsm>$(ILAsm) /pdb</ILAsm>
-    </PropertyGroup>
+    </PropertyGroup>-->
     <PropertyGroup Condition=" '$(DebugType)' == 'full' ">
       <ILAsm>$(ILAsm) /debug</ILAsm>
     </PropertyGroup>
@@ -114,12 +116,18 @@
     <PropertyGroup Condition=" '$(Platform)' == 'x64' ">
       <ILAsm>$(ILAsm) /pe64 /x64</ILAsm>
     </PropertyGroup>
+    <!--<PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
+      <ILAsm>$(ILAsm) /pe64 /x64</ILAsm>
+    </PropertyGroup>-->
+    <!--<PropertyGroup Condition="'$(Platform)'=='x86'">
+      <ILAsm>$(ILAsm) /pe64 /x64</ILAsm>
+    </PropertyGroup>-->
     <PropertyGroup Condition=" '$(Platform)' == 'Itanium' ">
       <ILAsm>$(ILAsm) /pe64 /itanium</ILAsm>
     </PropertyGroup>
-    <!--<PropertyGroup Condition=" '$(AssemblyOriginatorKeyFile)' != '' ">
+    <PropertyGroup Condition=" '$(AssemblyOriginatorKeyFile)' != '' ">
       <ILAsm>$(ILAsm) /key:"$(AssemblyOriginatorKeyFile)"</ILAsm>
-    </PropertyGroup>-->
+    </PropertyGroup>
     <PropertyGroup Condition=" Exists ( '$(ILResourceFile)' ) ">
       <ILAsm>$(ILAsm) /resource:"$(ILResourceFile)"</ILAsm>
     </PropertyGroup>
