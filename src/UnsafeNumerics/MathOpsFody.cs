@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using InlineIL;
 using static InlineIL.IL.Emit;
+#pragma warning disable IDE0060 // Remove unused parameter
 
 namespace Internal.UnsafeNumerics
 {
@@ -91,6 +92,7 @@ namespace Internal.UnsafeNumerics
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T DangerousNegate<T>(T item) where T : unmanaged
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             Ldarg_0();
             Neg();
@@ -136,43 +138,104 @@ namespace Internal.UnsafeNumerics
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool DangerousNotEquals<T>(T left, T right) where T : unmanaged
-        {
-            Ldarg_0();
-            Ldarg_1();
-            Call(new MethodRef(typeof(MathOps), nameof(DangerousEquals), 1, TypeRef.MethodGenericParameters[0], TypeRef.MethodGenericParameters[0]).MakeGenericMethod(typeof(T)));
-            Ldc_I4_0();
-            Ceq();
-            return IL.Return<bool>();
-        }
+            => !DangerousEquals(left, right);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool DangerousGreaterThan<T>(T left, T right) where T : unmanaged
-        {
-            throw new NotImplementedException();
+        { 
+            Ldarg_0();
+            Ldarg_1();
+            Call(new MethodRef(typeof(MathOps), nameof(DangerousEquals), 1, typeof(T), typeof(T)).MakeGenericMethod(typeof(T)));
+            Brtrue("Equal");
+
+            Ldarg_0();
+            Ldarg_1();
+            Cgt();
+            Ret();
+
+            IL.MarkLabel("Equal");
+            Ldc_I4_0();
+            return IL.Return<bool>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool DangerousLessThan<T>(T left, T right) where T : unmanaged
         {
-            throw new NotImplementedException();
+            Ldarg_0();
+            Ldarg_1();
+            Call(new MethodRef(typeof(MathOps), nameof(DangerousEquals), 1, typeof(T), typeof(T)).MakeGenericMethod(typeof(T)));
+            Brtrue("Equal");
+
+            Ldarg_0();
+            Ldarg_1();
+            Clt();
+            Ret();
+
+            IL.MarkLabel("Equal");
+            Ldc_I4_0();
+            return IL.Return<bool>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool DangerousGreaterEquals<T>(T left, T right) where T : unmanaged
         {
-            throw new NotImplementedException();
+            Ldarg_0();
+            Ldarg_1();
+            Call(new MethodRef(typeof(MathOps), nameof(DangerousEquals), 1, typeof(T), typeof(T)).MakeGenericMethod(typeof(T)));
+            Brtrue("Equal");
+
+            Ldarg_0();
+            Ldarg_1();
+            Cgt();
+            Ret();
+
+            IL.MarkLabel("Equal");
+            Ldc_I4_1();
+            return IL.Return<bool>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool DangerousLessEquals<T>(T left, T right) where T : unmanaged
         {
-            throw new NotImplementedException();
+            Ldarg_0();
+            Ldarg_1();
+            Call(new MethodRef(typeof(MathOps), nameof(DangerousEquals), 1, typeof(T), typeof(T)).MakeGenericMethod(typeof(T)));
+            Brtrue_S("Equal");
+
+            Ldarg_0();
+            Ldarg_1();
+            Clt();
+            Ret();
+
+            IL.MarkLabel("Equal");
+            Ldc_I4_1();
+            return IL.Return<bool>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int DangerousCompare<T>(T left, T right) where T : unmanaged
         {
-            throw new NotImplementedException();
+            Ldarg_0();
+            Ldarg_1();
+            Call(new MethodRef(typeof(MathOps), nameof(DangerousEquals), 1, typeof(T), typeof(T)).MakeGenericMethod(typeof(T)));
+            Brtrue_S("Equal");
+
+            Ldarg_0();
+            Ldarg_1();
+            Cgt();
+            Brfalse_S("Less");
+            Ldc_I4_1();
+            Ret();
+
+            IL.MarkLabel("Less");
+            Ldc_I4_M1();
+            Ret();
+
+            
+            IL.MarkLabel("Equal");
+            Ldc_I4_0();
+            return IL.Return<int>();
+
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
