@@ -1,4 +1,6 @@
-﻿using System.Resources;
+﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using Internal.UnsafeNumerics;
 using NUnit.Framework;
 
 using Ops = Internal.Numerics.MathOps;
@@ -83,25 +85,38 @@ namespace Tests
             Assert.AreEqual(Ops.DangerousCast<double, int>(123.56), UOps.DangerousCast<double, int>(123.56));
         }
 
-        [Test]
-        public unsafe void TestUndefinedBoolBehavior()
+        [SuppressMessage("ReSharper", "NotAccessedField.Local")]
+        private struct Test
         {
-            var b = true;
+            public string S;
+            public double D;
 
-            var x = *(int*) &b;
-
-            var r = UOps.DangerousSubtract(false, true);
-            //r = UOps.DangerousSubtract(r, true);
-
-            var y = *(int*) &r;
-
-            if (r)
-            {
-                Assert.AreNotEqual(r, true);
-                Assert.AreNotEqual(x, y);
-            }
-            else
-                Assert.Fail("Clause not entered.");
         }
+
+        [Test]
+        public void Test_UnsafeComparer()
+        {
+            var comp1 = UnsafeComparer.GetEqualityComparer<string>();
+            Assert.IsTrue(comp1.Equals("", ""));
+
+            var comp2 = UnsafeComparer.GetEqualityComparer<double>();
+            Assert.IsTrue(comp2.Equals(0.1 + 0.2, 0.3));
+
+            var comp3 = UnsafeComparer.GetEqualityComparer<Test>();
+            Assert.IsFalse(comp3.Equals(new Test {D = 0.1d + 0.2d, S = "Str"}, new Test { D = 0.3d, S = "Str"}));
+        }
+
+        [Test]
+        public void Test_UnsafeOrdering()
+        {
+            var comp = UnsafeComparer.GetComparer<double>();
+
+            Assert.That(comp.Compare(0.1 + 0.2, 0.3), Is.EqualTo(0));
+
+            var f_comp = UnsafeComparer.GetComparer<float>();
+
+            Assert.That(f_comp.Compare(0.2f, 0.1f), Is.EqualTo(1));
+        }
+
     }
 }
