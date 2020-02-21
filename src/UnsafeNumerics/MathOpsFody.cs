@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using InlineIL;
 using static InlineIL.IL.Emit;
@@ -7,6 +8,51 @@ namespace Internal.UnsafeNumerics
 {
     public static class MathOps
     {
+        private static readonly double DoubleEps = Math.Pow(2, -52);
+        private static readonly float FloatEps = (float)Math.Pow(2, -23);
+
+        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
+        public static bool AlmostEqual(this double @this, double that, double relComp = 1d)
+        {
+            if (double.IsInfinity(@this) || double.IsInfinity(that))
+                return @this == that;
+
+            if (double.IsNaN(@this) || double.IsNaN(that))
+                return false;
+
+            var thisAbs = Math.Abs(@this);
+            var thatAbs = Math.Abs(that);
+
+            if (thisAbs == 0d)
+                return (thatAbs < relComp * DoubleEps);
+            if (thatAbs == 0d)
+                return (thisAbs < relComp * DoubleEps);
+
+            return Math.Abs(@this - that) < relComp * DoubleEps * Math.Max(thisAbs, thatAbs);
+        }
+
+        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
+        public static bool AlmostEqual(this float @this, float that, float relComp = 1f)
+        {
+            if (float.IsInfinity(@this) || float.IsInfinity(that))
+                return @this == that;
+
+            if (float.IsNaN(@this) || float.IsNaN(that))
+                return false;
+
+            var thisAbs = Math.Abs(@this);
+            var thatAbs = Math.Abs(that);
+
+            if (thisAbs == 0f)
+                return (thatAbs < relComp * FloatEps);
+            if (thatAbs == 0f)
+                return (thisAbs < relComp * FloatEps);
+            
+            return Math.Abs(@this - that) < relComp * FloatEps * Math.Max(thisAbs, thatAbs);
+        }
+
+        public static void Test() => 123.0.AlmostEqual(3);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T DangerousAdd<T>(T left, T right) where T : unmanaged
         {
@@ -54,7 +100,38 @@ namespace Internal.UnsafeNumerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool DangerousEquals<T>(T left, T right) where T : unmanaged
         {
-            throw new NotImplementedException();
+            Ldtoken(new TypeRef(typeof(T)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Ldtoken(new TypeRef(typeof(double)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Call(new MethodRef(typeof(Type), "op_Equality", typeof(Type), typeof(Type)));
+            Brfalse_S("To_Float");
+            Ldarg_0();
+            Ldarg_1();
+            Ldc_R8(1d);
+            Call(new MethodRef(typeof(MathOps), nameof(AlmostEqual), typeof(double), typeof(double), typeof(double)));
+            Ret();
+
+            IL.MarkLabel("To_Float");
+            Ldtoken(new TypeRef(typeof(T)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Ldtoken(new TypeRef(typeof(float)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Call(new MethodRef(typeof(Type), "op_Equality", typeof(Type), typeof(Type)));
+            Brfalse_S("Default");
+            Ldarg_0();
+            Ldarg_1();
+            Ldc_R4(1f);
+            Call(new MethodRef(typeof(MathOps), nameof(AlmostEqual), typeof(float), typeof(float), typeof(float)));
+            Ret();
+
+
+            IL.MarkLabel("Default");
+            Ldarg_0();
+            Ldarg_1();
+            Ceq();
+         
+            return IL.Return<bool>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -62,7 +139,7 @@ namespace Internal.UnsafeNumerics
         {
             Ldarg_0();
             Ldarg_1();
-            Call(new MethodRef(typeof(MathOps), nameof(DangerousEquals), 1, TypeRef.MethodGenericParameters[0], TypeRef.MethodGenericParameters[0]));
+            Call(new MethodRef(typeof(MathOps), nameof(DangerousEquals), 1, TypeRef.MethodGenericParameters[0], TypeRef.MethodGenericParameters[0]).MakeGenericMethod(typeof(T)));
             Ldc_I4_0();
             Ceq();
             return IL.Return<bool>();
@@ -240,7 +317,6 @@ namespace Internal.UnsafeNumerics
             throw IL.Unreachable();
         }
 
-   
     }
 }
 
