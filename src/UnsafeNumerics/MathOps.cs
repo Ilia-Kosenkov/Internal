@@ -2,7 +2,7 @@
 
 namespace Internal.UnsafeNumerics
 {
-    public static class MathOps
+    public static class MathOps2
     {
         [MethodImpl(MethodImplOptions.ForwardRef | MethodImplOptions.AggressiveInlining, MethodCodeType = MethodCodeType.IL)]
         public static extern T DangerousAdd<T>(T left, T right) where T : unmanaged;

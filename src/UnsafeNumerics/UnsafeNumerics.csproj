@@ -29,7 +29,17 @@
     <Optimize>true</Optimize>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+
   <ItemGroup>
+    <PackageReference Include="Fody" Version="6.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="InlineIL.Fody" Version="1.3.4">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <!--<ItemGroup>
     <IL Include="**\*.il" Exclude="**\obj\**\*.il;**\bin\**\*.il" />
   </ItemGroup>
   <ItemGroup>
@@ -104,9 +114,9 @@
     <PropertyGroup Condition=" '$(OutputType)' == 'Library' ">
       <ILAsm>$(ILAsm) /dll</ILAsm>
     </PropertyGroup>
-    <!--<PropertyGroup Condition=" '$(DebugType)' == 'pdbonly' ">
+    --><!--<PropertyGroup Condition=" '$(DebugType)' == 'pdbonly' ">
       <ILAsm>$(ILAsm) /pdb</ILAsm>
-    </PropertyGroup>-->
+    </PropertyGroup>--><!--
     <PropertyGroup Condition=" '$(DebugType)' == 'full' ">
       <ILAsm>$(ILAsm) /debug</ILAsm>
     </PropertyGroup>
@@ -116,12 +126,12 @@
     <PropertyGroup Condition=" '$(Platform)' == 'x64' ">
       <ILAsm>$(ILAsm) /pe64 /x64</ILAsm>
     </PropertyGroup>
-    <!--<PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
+    --><!--<PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
       <ILAsm>$(ILAsm) /pe64 /x64</ILAsm>
-    </PropertyGroup>-->
-    <!--<PropertyGroup Condition="'$(Platform)'=='x86'">
+    </PropertyGroup>--><!--
+    --><!--<PropertyGroup Condition="'$(Platform)'=='x86'">
       <ILAsm>$(ILAsm) /pe64 /x64</ILAsm>
-    </PropertyGroup>-->
+    </PropertyGroup>--><!--
     <PropertyGroup Condition=" '$(Platform)' == 'Itanium' ">
       <ILAsm>$(ILAsm) /pe64 /itanium</ILAsm>
     </PropertyGroup>
@@ -138,6 +148,6 @@
     <ItemGroup>
       <FileWrites Include="@(IntermediateAssembly->'%(RootDir)%(Directory)DesignTimeResolveAssemblyReferencesInput.cache', ' ')" />
     </ItemGroup>
-    <Touch Files="$(ILFile)" />
-  </Target>
+    <Touch Files="$(ILFile)" />-->
+  <!--</Target>-->
 </Project>
