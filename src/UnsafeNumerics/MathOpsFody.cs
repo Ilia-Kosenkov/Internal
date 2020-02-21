@@ -114,14 +114,133 @@ namespace Internal.UnsafeNumerics
             Conv_R8();
             Ret();
 
+            // ---------------------------------------------------------------------------------------------
             IL.MarkLabel("To_Float");
+            Ldtoken(new TypeRef(typeof(TTo)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Ldtoken(new TypeRef(typeof(float)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Call(new MethodRef(typeof(Type), "op_Equality", typeof(Type), typeof(Type)));
+            Brfalse_S("To_Int64");
+            
+            Ldarg_0();
+            Conv_R4();
+            Ret();
+
+            // ---------------------------------------------------------------------------------------------
+            IL.MarkLabel("To_Int64");
+            Ldtoken(new TypeRef(typeof(TTo)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Ldtoken(new TypeRef(typeof(long)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Call(new MethodRef(typeof(Type), "op_Equality", typeof(Type), typeof(Type)));
+            Brfalse_S("To_Int32");
+            
+            Ldarg_0();
+            Conv_I8();
+            Ret();
+
+            // ---------------------------------------------------------------------------------------------
+            IL.MarkLabel("To_Int32");
+            Ldtoken(new TypeRef(typeof(TTo)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Ldtoken(new TypeRef(typeof(int)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Call(new MethodRef(typeof(Type), "op_Equality", typeof(Type), typeof(Type)));
+            Brfalse_S("To_Int16");
+
+            Ldarg_0();
+            Conv_I4();
+            Ret();
+
+            // ---------------------------------------------------------------------------------------------
+            IL.MarkLabel("To_Int16");
+            Ldtoken(new TypeRef(typeof(TTo)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Ldtoken(new TypeRef(typeof(short)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Call(new MethodRef(typeof(Type), "op_Equality", typeof(Type), typeof(Type)));
+            Brfalse_S("To_Int8");
+
+            Ldarg_0();
+            Conv_I2();
+            Ret();
+
+            // ---------------------------------------------------------------------------------------------
+            IL.MarkLabel("To_Int8");
+            Ldtoken(new TypeRef(typeof(TTo)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Ldtoken(new TypeRef(typeof(sbyte)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Call(new MethodRef(typeof(Type), "op_Equality", typeof(Type), typeof(Type)));
+            Brfalse_S("To_UInt64");
+
+            Ldarg_0();
+            Conv_I1();
+            Ret();
+
+
+            // ---------------------------------------------------------------------------------------------
+            IL.MarkLabel("To_UInt64");
+            Ldtoken(new TypeRef(typeof(TTo)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Ldtoken(new TypeRef(typeof(ulong)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Call(new MethodRef(typeof(Type), "op_Equality", typeof(Type), typeof(Type)));
+            Brfalse_S("To_UInt32");
+
+            Ldarg_0();
+            Conv_U8();
+            Ret();
+
+            // ---------------------------------------------------------------------------------------------
+            IL.MarkLabel("To_UInt32");
+            Ldtoken(new TypeRef(typeof(TTo)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Ldtoken(new TypeRef(typeof(uint)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Call(new MethodRef(typeof(Type), "op_Equality", typeof(Type), typeof(Type)));
+            Brfalse_S("To_UInt16");
+
+            Ldarg_0();
+            Conv_U4();
+            Ret();
+
+            // ---------------------------------------------------------------------------------------------
+            IL.MarkLabel("To_UInt16");
+            Ldtoken(new TypeRef(typeof(TTo)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Ldtoken(new TypeRef(typeof(ushort)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Call(new MethodRef(typeof(Type), "op_Equality", typeof(Type), typeof(Type)));
+            Brfalse_S("To_UInt8");
+
+            Ldarg_0();
+            Conv_U2();
+            Ret();
+
+            // ---------------------------------------------------------------------------------------------
+            IL.MarkLabel("To_UInt8");
+            Ldtoken(new TypeRef(typeof(TTo)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Ldtoken(new TypeRef(typeof(byte)));
+            Call(new MethodRef(typeof(Type), nameof(Type.GetTypeFromHandle), typeof(RuntimeTypeHandle)));
+            Call(new MethodRef(typeof(Type), "op_Equality", typeof(Type), typeof(Type)));
+            Brfalse_S("To_Throw");
+
+            Ldarg_0();
+            Conv_U1();
+            Ret();
+
+            // ---------------------------------------------------------------------------------------------
+            IL.MarkLabel("To_Throw");
             Newobj(MethodRef.Constructor(typeof(ArithmeticException)));
             Throw();
 
             throw IL.Unreachable();
         }
 
-
+   
     }
 }
 
